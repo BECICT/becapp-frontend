@@ -9,12 +9,12 @@ import Login from './components/login';
 import Register from './components/register';
 
 function App() {
-  const localStorage = window.localStorage.getItem('Authorised')
-  const[token, setToken] = useState()
+  // const localStorage = window.localStorage.getItem('Authorised')
+  // const[token, setToken] = useState()
   //const t = token
-  if (!localStorage) {
-    return <Login setToken={setToken}/>
-  }
+  // if (!localStorage) {
+  //   return <Login setToken={setToken}/>
+  // }
   
 //   const localStorage = window.localStorage.getItem('Authorised')
 //   if (localStorage) {
