@@ -13,7 +13,7 @@ const [state, setState] = useState({Message:"", Showmessage:false})
 // console.log(b)
 // const b = {Bearer, ...useState}
 // const option = {Bearer: userStr.Bearer}
-const url = 'http://localhost:3330/api/'
+const url = 'https://becregister.herokuapp.com/api/'
 const history = useHistory();
     type initials = {
       email: "",

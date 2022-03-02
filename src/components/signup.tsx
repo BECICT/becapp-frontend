@@ -17,7 +17,7 @@ export default function Signup() {
 
       const { register, handleSubmit, formState: {errors}} = useForm<initials>();
       const onSubmit: SubmitHandler<initials> = data => {
-        axios.post('http://localhost:3330/api/auth/signup', data)
+        axios.post('https://becregister.herokuapp.com/api/auth/signup', data)
             .then(response => {if(response.data){
                 history.push("/login")
             }})        
