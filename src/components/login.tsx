@@ -45,15 +45,15 @@ const history = useHistory();
       //   UserEmail: email,
       //   UserId: userId
       // }
-      localStorage.setItem("Bearer", JSON.stringify(token))
-      localStorage.setItem("Role", JSON.stringify(role))
-      localStorage.setItem("UserEmail", JSON.stringify(email))
-      localStorage.setItem("UserId", JSON.stringify(userId))
+      localStorage.setItem("Bearer", token)
+      localStorage.setItem("Role", role)
+      localStorage.setItem("UserEmail", email)
+      localStorage.setItem("UserId", userId)
       localStorage.setItem("Authorised", JSON.stringify(1))
 
       setToken = window.localStorage.getItem('Authorised')
-      window.location.reload()
-      history.push("/")
+      // window.location.reload()
+      // history.push("/")
       
     }
 
@@ -64,6 +64,8 @@ const history = useHistory();
         {
           if (!res.data.Id) {
             history.push("/newmultiform")
+          }else{
+            history.push("/")
           }
         })
         .catch(error => {
