@@ -15,13 +15,13 @@ export default function Register() {
     const [state, setState] = useState({Message:"", Showmessage:false});
     const {register, handleSubmit, watch, reset, formState:{errors}} = useForm<inpute>();
     const onSubmit: SubmitHandler<inpute> = data => {
-    axios.post('http://localhost:3330/api/utility/reg', data)
+    axios.post('http://localhost:3331/api/utility/reg', data)
         .then(response => 
           {setState({Message: "Your information have been saved, we will contact you for interview", Showmessage:true});          
         })        
         .catch(error => {
             setState({ Message: error.message,  Showmessage:true});
-            console.error('There was an error!', error);
+            // console.error('There was an error!', error);
         })
       }
 

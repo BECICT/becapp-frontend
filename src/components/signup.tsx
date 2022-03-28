@@ -2,11 +2,14 @@ import axios from 'axios';
 import { type } from 'os'
 import React, { useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { NavLink, useHistory } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 
 export default function Signup() {
     const [state, setState] = useState({Message:"", Showmessage:false})
-    const history = useHistory();
+    // const url = 'https://becregister.herokuapp.com/api/' //LIVE
+    const url ='http://localhost:3331/api/'     //LOCAL
+
+    const history = useNavigate();
     type initials = {
         fullname: "",
         email: "",
@@ -17,9 +20,9 @@ export default function Signup() {
 
       const { register, handleSubmit, formState: {errors}} = useForm<initials>();
       const onSubmit: SubmitHandler<initials> = data => {
-        axios.post('https://becregister.herokuapp.com/api/auth/signup', data)
+        axios.post(url + 'auth/signup', data)
             .then(response => {if(response.data){
-                history.push("/login")
+                history("/login")
             }})        
             .catch(error => {
               if (error) {

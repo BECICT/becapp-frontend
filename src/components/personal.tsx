@@ -7,21 +7,25 @@ import singlespeaker from '../images/speakers/single-speaker.jpg';
 export default function Personal() {
 
   const [status, setStatus] = useState(false);
-  const url = 'https://becregister.herokuapp.com/api/'
-  let id = '';
-  // useEffect(() => {
-  //   let userId = function (msg: any, data: any) {
-  //     id = data;
-  //     getStatus()
-  //   };
-  //   const sub = PubSub.subscribe("UserId", userId);
-  //    PubSub.unsubscribe(sub);
-  // }, [])
-  const getStatus = async () => {
-    const response = await axios.get(`${url}utility/${id}`)
-    setStatus(response.data)
-    console.log(response.data)
-  }
+  
+  const token = window.localStorage.getItem("Bearer")
+  // const url = 'https://becregister.herokuapp.com/api/'
+  const url ='http://localhost:3331/api/'     //LOCAL
+
+  let id = useParams();
+
+  
+  useEffect(() => {
+    const getStatus = async () => {
+      const response = await axios.get(`${url}member/${id.id}`,  {headers: { 'Authorization': `Bearer ${token}` }
+    })
+    
+      setStatus(response.data)
+      console.log(response.data)
+    }
+    getStatus()
+  }, [])
+  
 
 
   return (
@@ -34,10 +38,7 @@ export default function Personal() {
                 <div className="title">
                   <h3>Personal Details</h3>
                 </div>
-                {/* <ol className="breadcrumb p-0 m-0">
-            <li className="breadcrumb-item"><a href="index.html">Home</a></li>
-            <li className="breadcrumb-item active">Speaker Details</li>
-          </ol> */}
+               
               </div>
             </div>
           </div>

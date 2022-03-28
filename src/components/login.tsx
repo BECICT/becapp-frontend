@@ -2,19 +2,15 @@ import axios from 'axios';
 import { type } from 'os'
 import React, { useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 export default function Login({setToken}:any) {  
 const [state, setState] = useState({Message:"", Showmessage:false})
-// const [userexist, setuserexist] = useState();
-// let userStr = localStorage.getItem("auth");
-// const b = JSON.parse(useState)
-// console.log(b)
-// const b = {Bearer, ...useState}
-// const option = {Bearer: userStr.Bearer}
-const url = 'https://becregister.herokuapp.com/api/'
-const history = useHistory();
+
+// const url = 'https://becregister.herokuapp.com/api/' //LIVE
+const url ='http://localhost:3331/api/'     //LOCAL
+const history = useNavigate();
     type initials = {
       email: "",
       password: ""
@@ -63,9 +59,10 @@ const history = useHistory();
       .then(res => 
         {
           if (!res.data.Id) {
-            history.push("/newmultiform")
+            history("/newmultiform")
+            window.location.reload()
           }else{
-            history.push("/")
+            history("/")
           }
         })
         .catch(error => {
@@ -75,7 +72,7 @@ const history = useHistory();
     }})}
 
     const goSingup = () => {
-      history.push("/signup")
+      history("/signup")
     }
 
     return (

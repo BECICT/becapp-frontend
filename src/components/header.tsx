@@ -1,14 +1,18 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import logo from '../images/logo.png'
 import tiketlogo from '../images/icon/ticket.png'
 import { NavLink } from 'react-router-dom'
 
 export default function Header() {
-  // const [showSingIn, setShowSingIn] = useState(true)
-  // const authorised = window.localStorage.getItem('Authorised')
-  // if (authorised) {
-  //   setShowSingIn(false)
-  // }
+  
+  const[user, setUser] = useState<any>(null)
+
+  useEffect(() => {
+    const au = localStorage.getItem('Authorised');
+    au === '1' ? setUser(false) : setUser(true)
+  }, [])
+
+
     return (
         <>
 <nav className="navbar main-nav border-less fixed-top navbar-expand-lg p-0">
@@ -22,19 +26,18 @@ export default function Header() {
     </button>
     <div className="collapse navbar-collapse" id="navbarNav">
   
-      <ul className="navbar-nav mx-auto">
+    {!user ?<ul className="navbar-nav mx-auto">
      
       <li className="nav-item">< NavLink to="/" className="nav-link"> Home<span>/</span></NavLink></li>
 
-        <li className="nav-item"><NavLink to="/about" className="nav-link" >About<span>/</span></NavLink></li>
-       
+        <li className="nav-item"><NavLink to="/about" className="nav-link" >About<span>/</span></NavLink></li>     
         
         <li className="nav-item dropdown dropdown-slide">
           <a className="nav-link" href="#" data-toggle="dropdown">Pages<span>/</span></a>
           {/* Dropdown list */}
           <div className="dropdown-menu">
-            <a className="dropdown-item" href="about-us.html">About Us</a>
-            <a className="dropdown-item" href="single-speaker.html">Single Speaker</a>
+            <a className="dropdown-item">< NavLink to="/" className="nav-link">List Page<span></span></NavLink></a>
+            <a className="dropdown-item" >< NavLink to="/" className="nav-link">Profile Page<span></span></NavLink></a>
             <a className="dropdown-item" href="gallery.html">Gallery</a>
             <a className="dropdown-item" href="gallery-two.html">Gallery-02</a>
             <a className="dropdown-item" href="testimonial.html">Testimonial</a>
@@ -64,9 +67,9 @@ export default function Header() {
         <li className="nav-item">
           <a className="nav-link" href="contact.html">Contact</a>
         </li>
-      </ul>
+      </ul>:<></>}
      
-      {true ?<div className="subscribe-button">
+      {user ?<div className="subscribe-button">
   <NavLink className="btn btn-main-md" to="/login">Sign In</NavLink>
 </div>: <div className="subscribe-button">
   <NavLink className="btn btn-main-md" to="/login">Sign Out</NavLink>

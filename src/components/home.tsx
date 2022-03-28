@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import featuredspeaker from '../images/speakers/featured-speaker.jpg'
 import speakerone from '../images/speakers/speaker-one.jpg'
 import speakertwo from '../images/speakers/speaker-two.jpg'
@@ -7,6 +7,12 @@ import speakerfour from '../images/speakers/speaker-four.jpg'
 import { NavLink } from "react-router-dom";
 
 export default function Home() {
+  const[user, setUser] = useState<any>(null)
+
+  useEffect(() => {
+    const au = localStorage.getItem('Authorised');
+    au === '1' ? setUser(false) : setUser(true)
+  }, [])
   return (
     <>
       <div>
@@ -22,9 +28,9 @@ export default function Home() {
                   {/* <h2>Register</h2> */}
                   {/* <h6>02-05 July 2017 California</h6> */}
                   {/* Action Button */}
-                  <NavLink  to="/register" className="btn btn-white-md">
+                  {user ? <NavLink  to="/register" className="btn btn-white-md">
                     Join Now
-                  </NavLink>
+                  </NavLink>: <></>}
                 </div>
               </div>
             </div>

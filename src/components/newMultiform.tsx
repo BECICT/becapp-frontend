@@ -1,7 +1,8 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import querystring  from "react-query"
 // import PubSub from 'pubsub-js'
 
 export default function NewMultiform() {
@@ -14,15 +15,16 @@ export default function NewMultiform() {
     mode: "onChange",
     reValidateMode: 'onChange'
   });
-  const history = useHistory();
+  const history = useNavigate();
 
 
-  const url = 'https://becregister.herokuapp.com/api/'
-  // const url = 'http://localhost:3331/api/'
+  // const url = 'https://becregister.herokuapp.com/api/'
+  const url = 'http://localhost:3331/api/'
   const token = localStorage.getItem("Bearer")
 
   console.log(errors);
-
+   
+  const [state, setState] = useState({Message:"", Showmessage:false})
   const [page, setPage] = useState(0);
   const [btnvisible, setbtnvisible] = useState(true)
   //----------------------------------------
@@ -32,7 +34,7 @@ export default function NewMultiform() {
   const [holyGhostBaptisim, setHolyGhostBaptisim] = useState(false);
   const [date, setDate] = useState(false);
   const [employmentStatus, setEmploymentStatus] = useState(false);
-  const [profession, setProfession] = useState(false);
+  // const [profession, setProfession] = useState(false);
   const [student, setStudent] = useState(false);
   const UserId = localStorage.getItem("UserId");
 
@@ -41,18 +43,22 @@ export default function NewMultiform() {
 
 
   const onSubmit = (data: any) => {
-    // const token = localStorage.getItem('Bearer')
-    console.log('RAWDATA: ' + data)
-    axios.post(url + 'utility/multiform', data, {headers: { 'Authorization': `Bearer ${token}` }
+    console.log('DATA: '+ data)
+    axios.post(url + 'member/multiform', data, {headers: { 'Authorization': `Bearer ${token}` }
     }).then(res => {
-      console.log("DATA: " + res.data, "header: " + res.headers)
-      // PubSub.publish("UserId",UserId)
-      history.push('/personal')
+      if (!res.data.error) {
+      //   const result = res.data.data
+      // const stringresult = JSON.stringify({...result})
+        history(`/personal/${res.data.data.Id}`)
+      }else{
+        setState({ Message: res.data.errorMessage,  Showmessage:true});
+      }           
     }).catch((err) => {
-      let message = typeof err.response !== "undefined" ? err.response.data.message : err.message;
-      console.warn("error", message);
+      if (err) {
+        setState({ Message: 'Somthing went wrong. Please contact your unit head',  Showmessage:true});
+      }
     });
-  } //console.log("Street: "+JSON.stringify(data));
+  } 
   const pageTitles = ["Personal Info", "Profile", "Contact", "Employment"];
   
 
@@ -118,6 +124,8 @@ export default function NewMultiform() {
           <div className="row">
             <div className="col-12">
               <div className="section-title">
+              <p><b className="alternate">{state.Showmessage ? state.Message : " "}</b>                      
+                      </p> 
                 <h3>
                   {pageTitles[page]} <span className="alternate"></span>
                 </h3>
@@ -312,7 +320,7 @@ export default function NewMultiform() {
                   />
 
                 </div>
-                <div className="col-md-4">
+                {/* <div className="col-md-4">
                   <label htmlFor="membershipStatus">
                     {errors.membershipStatus && (
                       <span className="alternate">
@@ -335,7 +343,7 @@ export default function NewMultiform() {
                     </select>
                   </div>
 
-                </div>
+                </div> */}
                 <div className="col-md-4">
                   <label htmlFor="subunitId">
                     {errors.subunitId && (
@@ -351,9 +359,10 @@ export default function NewMultiform() {
                         required: true
                       })}
                     >
-                      <option value="">Select FROMDB</option>
-                      <option value="Male">FROMDB</option>
-                      <option value="Female">FROMDB</option>
+                      <option value="">Select</option>
+                      <option value="Operation">Operation</option>
+                      <option value="Maintenance">Maintenance</option>
+                      <option value="TMU">TMU</option>
                     </select>
                   </div>
 
@@ -522,7 +531,7 @@ export default function NewMultiform() {
                   <div className="form-group">
                     <select
                       className="form-control main"
-                      {...register("holyGhostBaptisim", {
+                      {...register("wSFStatus", {
                         required: "this feild is reqired",
                       })}
                     >
@@ -537,7 +546,19 @@ export default function NewMultiform() {
                   </div>
 
                 </div>
+                <div className="col-md-4">
+                  <label htmlFor="WSF Address">
+                    {errors.district && (
+                      <span className="alternate">This field is required</span>
+                    )}
+                  </label>
+                  <input
+                    {...register("district", { required: true })}
+                    className="form-control main"
+                    placeholder="WSF Address"
+                  />
 
+                </div>
                 <div className="col-md-4">
                   <label htmlFor="area">
                     {errors.area && (
@@ -550,20 +571,7 @@ export default function NewMultiform() {
                     placeholder="Area"
                   />
 
-                </div>
-                <div className="col-md-4">
-                  <label htmlFor="district">
-                    {errors.district && (
-                      <span className="alternate">This field is required</span>
-                    )}
-                  </label>
-                  <input
-                    {...register("district", { required: true })}
-                    className="form-control main"
-                    placeholder="District"
-                  />
-
-                </div>
+                </div>              
                 <div className="col-md-4">
                   <label htmlFor="zone">
                     {errors.zone && (
@@ -589,7 +597,7 @@ export default function NewMultiform() {
                     )}
                   </label>
                   <input
-                    {...register("address1", { required: true })}
+                    {...register("Address1", { required: true })}
                     className="form-control main"
                     placeholder="Address 1"
                   />
@@ -620,31 +628,31 @@ export default function NewMultiform() {
                     {...register("PrimaryPhoneNo", {
                       required: true,
                       pattern:
-                        /^(\+{0,})(\d{0,})([(]{1}\d{1,3}[)]{0,}){0,}(\s?\d+|\+\d{2,3}\s{1}\d+|\d+){1}[\s|-]?\d+([\s|-]?\d+){1,2}(\s){0,}$/gm,
+                      /(^[0]\d{10}$)|(^[\+]?[234]\d{12}$)/,
                     })}
                     className="form-control main"
                     type="number"
-                    placeholder="Phone"
+                    placeholder="Primary Phone Number"
                   />
 
                 </div>
                 <div className="col-md-4">
                   <label htmlFor="otherPhonenumber">
-                    {errors.otherPhonenumber && (
+                    {/* {errors.otherPhonenumber && (
                       <span className="alternate">
                         The Phone number field is required
                       </span>
-                    )}
+                    )} */}
                   </label>
                   <input
-                    {...register("otherPhonenumber", {
-                      required: true,
+                    {...register("OtherPhoneNo", {
+                      required: false,
                       pattern:
-                        /^(\+{0,})(\d{0,})([(]{1}\d{1,3}[)]{0,}){0,}(\s?\d+|\+\d{2,3}\s{1}\d+|\d+){1}[\s|-]?\d+([\s|-]?\d+){1,2}(\s){0,}$/gm,
+                      /(^[0]\d{10}$)|(^[\+]?[234]\d{12}$)/,
                     })}
                     className="form-control main"
                     type="number"
-                    placeholder="Alt.Phone"
+                    placeholder="Alternate Phone"
                   />
 
                 </div>
@@ -657,7 +665,7 @@ export default function NewMultiform() {
                     )}
                   </label>
                   <input
-                    {...register("email", {
+                    {...register("EmailAddress", {
                       required: true,
                       pattern: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
                     })}
@@ -682,14 +690,14 @@ export default function NewMultiform() {
                   <div className="form-group">
                     <select
                       className="form-control main"
-                      {...register("employmentStatus", {
-                        required: true
+                      {...register("EmploymentStatus", {
+                        required: false
                       })}
                       onChange={(e) => selectEmploymentStatus(e)}
                     // onChange={(e) => selectProfession(e)}
 
                     >
-                      <option value="">Employment Staus</option>
+                      <option value="">Employment Status</option>
                       <option value="Employed">Employed</option>
                       <option value="Unemployed">Unemployed</option>
                       <option value="Student">Student</option>
@@ -763,7 +771,7 @@ export default function NewMultiform() {
                     )}
                   </label>
                   <input
-                    {...register("educationalQualification", { required: true })}
+                    {...register("EducationalQualification", { required: true })}
                     className="form-control main"
                     placeholder="Educational Qualification"
                   />
@@ -775,7 +783,7 @@ export default function NewMultiform() {
 
 
             <div className="col-12 text-center">
-              <button type="button" disabled={page == 0} onClick={() => { prevBtn() }} className="btn btn-main-md">
+              <button type="button" disabled={page === 0} onClick={() => { prevBtn() }} className="btn btn-main-md">
                 PREV
               </button>&nbsp;
               {btnvisible ? <button
@@ -788,7 +796,7 @@ export default function NewMultiform() {
                 <button type="submit"
                   onClick={handleSubmit(onSubmit)}
                   className="btn btn-main-md">
-                    <a href="/personal"></a>
+                    {/* <a href="/personal"></a> */}
                   SUBMIT
                 </button>}
             </div>
